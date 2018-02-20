@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html ng-app="dialerApp">
+<head>
+    <meta charset="utf-8" />
+    <title>Socket io1</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.0.0.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" /> 
+    <style>
+        .member{
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin: 0 auto; width: 50%;">
+        <div class="col-sm-12">
+            <div>register Yourself <input type="text" id="username"><input type="button" name="submit" value="save" id="saveuser"></div>
+        </div>
+        <br/>
+        <div class="col-sm-12">
+            <h3>Selected Member---> <span id="selected-member"></span></h3>
+        </div>
+        <div class="col-sm-12">
+            <div class="col-sm-3"> 
+                <ul>
+                    <li class="member" id="shri">
+                        shri
+                    </li>
+                </ul>
+
+            </div>
+            <div class="col-sm-9">
+                chat section
+                <div id="chat"></div>
+                <textarea id="mymessage" placeholder="type message here"></textarea><br>
+                 <input type="button" name="submit" value="send" id="save">
+
+            </div>
+        </div>
+    </div>
+  <!--  <div class="jumbotron" >
+    <div id="chat"></div>
+        <h1>this is io</h1>
+        <div>username <input type="text" id="username"></div>
+        type text area <div><textarea id="mymessage"></textarea></div>
+
+        <input type="button" name="submit" value="sumbit" id="save">
+    </div>
+    -->
+    <script>
+    	$(function(){
+            $(".member").click(function(){
+                var selectedId= $(this).attr('id');
+                $("#selected-member").html(selectedId);
+            })
+    		var socket = io.connect();
+    		//v//ar 
+    		$('#save').click(function(){
+    			var mydata = {};
+    			mydata.mymessage = $('#mymessage').val();
+    			mydata.name = localStorage.getItem('name');
+    			//alert(mymessage);
+    			socket.emit('mymessage', mydata)
+    		});
+
+    		$('#saveuser').click(function(){
+    			var username = $('#username').val();
+    			socket.emit('saveSocket', username)
+    		});
+
+    		socket.on('newmessage', function(data){
+    			console.log(data);
+    			$('#chat').append('<div>'+data.msg+'</div>');
+    		})
+
+
+    	})
+    </script>
+</body>
+</html>
